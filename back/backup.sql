@@ -87,10 +87,10 @@ CREATE TABLE `Entidades` (
 /*Data for the table `Entidades` */
 
 insert  into `Entidades`(`idEntidad`,`tipo`,`caract`) values 
-(5645,'I','CONMEBOL'),
-(6529,'I','CAF'),
-(45623,'I','AFC'),
-(98765,'I','UEFA');
+(5645,'I','Cristiano Ronaldo'),
+(6529,'I','Lionel Messi'),
+(45623,'I','Neymar'),
+(98765,'I','Mbappe');
 
 /*Table structure for table `Evaluaciones` */
 
