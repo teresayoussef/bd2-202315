@@ -4,23 +4,21 @@
 
 DELIMITER $$
 
-CREATE FUNCTION numeroArticulos(
-cod INT
-)
-
-RETURNS INT DETERMINISTIC
-BEGIN
-DECLARE cont INT DEFAULT 0;
-
-SELECT COUNT(cod_entidad) INTO cont
-FROM ARTICULOS
-WHERE (cod_entidad = cod);
-
-IF cont = 0 THEN
-SET cont = NULL;
-END IF;
-RETURN cont;
-
+CREATE FUNCTION NumeroArticulos(
+    id INT
+) RETURNS INT NOT DETERMINISTIC
+BEGIN    
+    DECLARE cont INT DEFAULT 0;
+    
+    IF id NOT IN (SELECT cod_entidad FROM TIP0_ENTIDAD) THEN
+        RETURN NULL;
+    END IF;
+        
+    SELECT COUNT(cod_entidad) INTO cont 
+    FROM ARTICULOS
+    WHERE (id = cod_entidad);
+    
+    RETURN cont;
 END $$
 
-DELIMITER ; 
+DELIMITER ;

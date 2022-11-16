@@ -7,7 +7,7 @@
 DELIMITER $$
 
 CREATE FUNCTION mejorArticulo(codigoCarac INT)
-RETURNS INT DETERMINISTIC
+RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE mejor INT;
     
@@ -21,13 +21,13 @@ BEGIN
     C.tipo = 'cuantitativa'
     GROUP BY (A.cod_articulo)
     HAVING (AVG(E.nota) = (SELECT MAX(Promedio)
-	FROM (SELECT AVG(E1.nota) AS Promedio
-		FROM EVALUA E1
-			WHERE (E1.cod_carac = codigoCarac)
-				GROUP BY (E1.cod_articulo)
-				)AS tabla )) 
-    ORDER BY EV.fecha
-    LIMIT 1;
+    FROM (SELECT AVG(E1.nota) AS Promedio
+        FROM EVALUA E1
+            WHERE (E1.cod_carac = codigoCarac)
+                GROUP BY (E1.cod_articulo)
+                )AS tabla )) 
+    ORDER BY EV.fecha, RAND()
+    LIMIT 1; 
     
     RETURN (mejor);
 END$$
