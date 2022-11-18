@@ -1,0 +1,6 @@
+DELIMITER // 
+
+CREATE PROCEDURE CLEAN_TABLE()
+BEGIN 
+	DELETE FROM ultimas_evaluaciones;
+END; 
