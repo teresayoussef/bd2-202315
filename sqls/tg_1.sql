@@ -1,26 +1,20 @@
-DELIMITER $$
+DELIMITER //
 
-CREATE TRIGGER checkDuplicado_
-BEFORE INSERT ON ARTICULOS 
+CREATE TRIGGER checkDuplicado_ 
+BEFORE INSERT ON ARTICULOS
+FOR EACH ROW
 
-FOR EACH ROW 
+BEGIN
+    DECLARE cont INT;
 
-BEGIN 
+    SELECT COUNT(cod_articulo) INTO cont
+    FROM ARTICULOS
+    WHERE (NEW.cod_entidad = cod_entidad)
+    AND (NEW.descr = descr);
 
-DECLARE cont INT;
+    IF (cont > 0) THEN
+	SET NEW.descr = CONCAT(NEW.descr, 'DUPLICADO(A)');
+    END IF;
+END //
 
-SELECT COUNT (descr)
-INTO cont
-FROM ARTICULOS a
-WHERE a.descr = new.descr
-AND a.cod_entidad = new.cod_entidad; 
-
-IF (@cont > 0) THEN 
-	SET new.descr = CONCAT (new.descr, 'DUPLICADO(A)');
-END IF;
-
-		
-END $$
-
-DELIMITER ; 
-	
+DELIMITER ;

@@ -1,22 +1,21 @@
-DELIMITER $$
+DELIMITER //
 
-CREATE TRIGGER verif_evalau_fech BEFORE INSERT ON EVALUACIONES FOR EACH ROW 
+CREATE TRIGGER verifcEvaluacion_fecha BEFORE INSERT ON EVALUACIONES FOR EACH ROW 
 BEGIN
-
-SET @PrinEvalua = (SELECT cod_evaluacion
-               FROM EVALUACIONES AS EV, EVALUA AS t, CARACTERISTICAS AS c, ARTICULOS AS o
-               WHERE 
-            EV.cod_evaluacion = E.cod_evaluacion 
-            AND C.cod_carac = E.cod_carac 
-            AND A.cod_articulo   = E.cod_articulo   
-            AND new.Fecha = EV.Fecha);
-         
-IF ( new.cod_evaluacion = @PrinEvalua) THEN
-
-   SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: no se permite mas de una evaluacion por dia';
-            
-END IF;    
-  
-END$$
+    DECLARE codTemporal INT DEFAULT (
+        SELECT cedula
+        FROM ARTICULOS A, EVALUACIONES E_V, CARACTERISTICAS C, EVALUADORES EV, EVALUA E
+        WHERE (A.cod_entidad = E.cod_entidad)
+        AND   (E.cod_carac = C.cod_carac)
+        AND   (E.cod_evaluacion = E_V.cod_evaluacion)
+        AND   (E_V.cedula = EV.cedula)
+        AND   (E_V.fecha = NEW.fecha) 
+    );
+    
+    IF (codTemporal = NEW.cedula) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'ERROR: no se permite mas de una evaluacion por dia';    
+    END IF;
+END //
 
 DELIMITER ;
